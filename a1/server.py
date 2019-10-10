@@ -1,12 +1,11 @@
-#import socket module
 from socket import *
 import sys
 import threading
 
 class Server:
-    def __init__(self):
+    def __init__(self, *args):
         self.port = 8080
-        self.host = gethostbyname(gethostname())
+        self.host = args[0][1]
         print("HOST IP: "+self.host)
         try:
             self.s = socket(AF_INET, SOCK_STREAM)
@@ -19,8 +18,8 @@ class Server:
             self.s.bind((self.host,self.port))
             print("...Socket object bound Succesfully!")
         except error as msg:
-            print("Failed to bind socket. Error Code: "+str(msg[0]+" Message: "+msg[1]))
-            sys,exit()
+            print("Failed to bind socket. Error Code: "+str(msg[1]+" Message: "+msg[1]))
+            sys.exit()
 
     def listen(self):
         self.s.listen(5);
@@ -38,7 +37,7 @@ class Server:
                 f = open(filename[1:])
                 for line in f:
                     output += line
-                print("SENDING:\n")
+                print("Sending Recieved Data...\n")
                 c.send(output.encode())
                 c.send("\r\n\r\n".encode())
                 c.close()
@@ -55,6 +54,6 @@ class Server:
 
 if __name__ == "__main__":
     print("server.py started from command line")
-    serv= Server()
+    serv= Server(sys.argv)
     serv.listen()
 
